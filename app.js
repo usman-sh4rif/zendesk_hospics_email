@@ -4,12 +4,9 @@ const fs = require("fs");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 
-const {
-  fromEmail,
-  configMail,
-  registeredEmails,
-} = require("./config/mail.config");
+const { fromEmail, configMail } = require("./config/mail.config");
 const validateForm = require("./middleware/validate_form");
+const { generateEmail } = require("./styled_email_template");
 
 const app = express();
 app.use(cors());
@@ -43,21 +40,35 @@ app.post(
   async (req, res) => {
     const { dept, deptText, name, agency, email, phone, message } = req.body;
 
-    const from_name = name || "Zendesk Support";
-    const email_message = `
-      <h1>Hello Receipent</h1>
-      <p><b>For Department</b>: ${deptText} - ${dept} </p>
-      <p><b>Name</b>: ${name}</p>
-      <p><b>Agency</b>: ${agency}</p>
-      <p><b>Email</b>: ${email}</p>
-      <p><b>Phone</b>: ${phone}</p>
-      <p><b>Message</b>: ${String(message)}</p>
-    `;
+    const from_name = "Hospice Help Center"; //name || "Zendesk Support";
+    // const email_message = `
+    //   <h1>Hello Receipent</h1>
+    //   <p><b>For Department</b>: ${deptText} - ${dept} </p>
+    //   <p><b>Name</b>: ${name}</p>
+    //   <p><b>Agency</b>: ${agency}</p>
+    //   <p><b>Email</b>: ${email}</p>
+    //   <p><b>Phone</b>: ${phone}</p>
+    //   <p><b>Message</b>: ${String(message)}</p>
+    // `;
+    let subject = deptText;
+    if (deptText.toLowerCase() == "support") {
+      subject = "Support Ticket";
+    } else if (deptText.toLowerCase().includes("other")) {
+      subject = "Contact Form Submission";
+    }
+    const email_message = generateEmail(
+      deptText,
+      name,
+      agency,
+      email,
+      phone,
+      message
+    );
     const mainConfig = {
       from: `${from_name} <${fromEmail}>`,
       // to: [to, "xsaf@axrtgsadf.xssss"],
       to: [dept],
-      subject: "Message from Zendesk Help and support",
+      subject: subject, // "Message from Zendesk Help and support",
       html: email_message,
     };
 
@@ -94,6 +105,4 @@ app.post(
 );
 
 const PORT = process.env.PORT || 3005;
-app.listen(PORT, () =>
-  console.log(`listening on port http://localhost:${PORT}`)
-);
+app.listen(PORT, () => console.log(`listening on port ${PORT}`));

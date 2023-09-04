@@ -7,6 +7,7 @@ const registeredEmails = [
   "mohd.sh4rif@gmail.com",
   "sh4rif@hotmail.co.uk",
   "usman.sharif@dynamologic.com",
+  "sadaf.kayani@dynamologic.com",
 ];
 
 const configMail = () => {
@@ -22,6 +23,6 @@ const configMail = () => {
     
   });
   return transporter;
-};
+}; 
 
 module.exports = { fromEmail, registeredEmails, configMail };

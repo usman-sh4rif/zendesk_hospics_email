@@ -16,36 +16,39 @@ const validateForm = async (req, res, next) => {
       message: "Invalid Department",
     });
   }
+
   if (!name) {
     errorMsg.push({
       field: "name",
       message: "Name is required",
     });
   }
-  if (!agency) {
-    errorMsg.push({
-      field: "agency",
-      message: "Agency is required",
-    });
-  }
+  // if (!agency) {
+  //   errorMsg.push({
+  //     field: "agency",
+  //     message: "Agency is required",
+  //   });
+  // }
+  
   if (!email) {
     errorMsg.push({
       field: "email",
       message: "Your Email is required",
     });
   }
+  
   if (!phone) {
     errorMsg.push({
       field: "phone",
       message: "Phone is required",
     });
   }
-  if (!message) {
-    errorMsg.push({
-      field: "message",
-      message: "Message is required",
-    });
-  }
+  // if (!message) {
+  //   errorMsg.push({
+  //     field: "message",
+  //     message: "Message is required",
+  //   });
+  // }
 
   if (errorMsg.length) {
     if (req.files?.length) {
